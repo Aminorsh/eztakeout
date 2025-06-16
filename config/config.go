@@ -1,6 +1,7 @@
 package config
 
 import (
+	"eztakeout/model"
 	"fmt"
 
 	"gorm.io/driver/mysql"
@@ -16,5 +17,8 @@ func InitDB() {
 		panic("Failed to connect to database: " + err.Error())
 	}
 	fmt.Println("Database connection established successfully")
+
+	db.AutoMigrate(&model.Employee{}) // Automatically migrate the Employee model
+	db.AutoMigrate(&model.Category{}) // Automatically migrate the Category model
 	DB = db
 }
