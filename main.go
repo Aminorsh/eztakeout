@@ -1,10 +1,8 @@
 package main
 
 import (
-	"eztakeout/controller"
-	"eztakeout/service"
+	"eztakeout/router"
 
-	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -16,16 +14,6 @@ func main() {
 		panic("failed to connect database")
 	}
 
-	r := gin.Default()
-
-	empService := &service.EmployeeService{
-		DB: db,
-	}
-	empController := &controller.EmployeeController{
-		Service: empService,
-	}
-
-	r.POST("/login", empController.Login)
-
+	r := router.InitRouter(db)
 	r.Run(":8080") // Run on port 8080
 }

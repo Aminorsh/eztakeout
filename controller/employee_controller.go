@@ -25,6 +25,8 @@ func (c *EmployeeController) Login(ctx *gin.Context) {
 		return
 	}
 
+	ctx.SetCookie("session_id", "logged_in", 60, "/", "localhost", false, true)
+
 	ctx.JSON(http.StatusOK, gin.H{
 		"code":    0,
 		"message": "success",
