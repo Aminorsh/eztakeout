@@ -16,3 +16,14 @@ type SetmealAddDTO struct {
 	CategoryID  uint64           `json:"category_id"`
 	Dishes      []SetmealDishDTO `json:"dishes"`
 }
+
+type SetmealPageQuery struct {
+	Name     string `json:"name"`
+	Page     int    `json:"page"`
+	PageSize int    `json:"page_size"`
+}
+
+type SetmealStatusDTO struct {
+	ID     uint64 `json:"id" binding:"required"`
+	Status *int   `json:"status" binding:"required,oneof=0 1"`
+}
