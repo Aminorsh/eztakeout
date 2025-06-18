@@ -39,6 +39,9 @@ func InitRouter(db *gorm.DB) *gin.Engine {
 
 		authorized.POST("/dishes", dishController.Add)
 		authorized.GET("/dishes/page", dishController.Page)
+
+		authorized.PUT("/dishes", dishController.Update)
+		authorized.PUT("/dishes/:id/status", dishController.UpdateStatus)
 	}
 
 	return r

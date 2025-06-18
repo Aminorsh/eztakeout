@@ -35,3 +35,19 @@ func (s *DishService) PageList(name string, page int, pageSize int) ([]model.Dis
 
 	return dishes, total, err
 }
+
+func (s *DishService) Update(dish *model.Dish) error {
+	return s.DB.Model(&model.Dish{}).
+		Where("id = ?", dish.ID).
+		Updates(dish).Error
+}
+
+func (s *DishService) UpdateStatus(id uint64, status int) error {
+	return s.DB.Model(&model.Dish{}).
+		Where("id = ?", id).
+		Update("status", status).Error
+}
+
+func (s *DishService) Delete(id uint64) error {
+	return s.DB.Where("id = ?", id).Delete(&model.Dish{}).Error
+}
