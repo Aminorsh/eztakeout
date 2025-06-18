@@ -15,10 +15,12 @@ func InitRouter(db *gorm.DB) *gin.Engine {
 	// Initialize services
 	empService := &service.EmployeeService{DB: db}
 	catService := &service.CategoryService{DB: db}
+	dishService := &service.DishService{DB: db}
 
 	// Initialize controllers
 	empController := &controller.EmployeeController{Service: empService}
 	catController := &controller.CategoryController{Service: catService}
+	dishController := &controller.DishController{Service: dishService}
 
 	// Define routes
 	r.POST("/login", empController.Login)
@@ -34,6 +36,9 @@ func InitRouter(db *gorm.DB) *gin.Engine {
 		authorized.PUT("/categories", catController.Update)
 
 		authorized.GET("/categories/page", catController.Page)
+
+		authorized.POST("/dishes", dishController.Add)
+		authorized.GET("/dishes/page", dishController.Page)
 	}
 
 	return r
