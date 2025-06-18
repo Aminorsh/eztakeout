@@ -82,3 +82,18 @@ func (c *SetmealController) UpdateStatus(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, gin.H{"code": 0, "message": "Status updated successfully"})
 }
+
+func (c *SetmealController) Delete(ctx *gin.Context) {
+	var ids []uint64
+	if err := ctx.ShouldBindJSON(&ids); err != nil || len(ids) == 0 {
+		ctx.JSON(http.StatusBadRequest, gin.H{"code": 1, "message": "Parameter error"})
+		return
+	}
+
+	if err := c.Service.DeleteByIDs(ids); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"code": 1, "message": "Failed to delete setmeals"})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"code": 0, "message": "Setmeals deleted successfully"})
+}

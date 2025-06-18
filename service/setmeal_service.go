@@ -82,3 +82,9 @@ func (s *SetmealService) UpdateStatus(id uint64, status int) error {
 		Where("id = ?", id).
 		Update("status", status).Error
 }
+
+func (s *SetmealService) DeleteByIDs(ids []uint64) error {
+	return s.DB.Model(&model.Setmeal{}).
+		Where("id IN ?", ids).
+		Update("is_deleted", 1).Error
+}
