@@ -23,3 +23,27 @@ func (s *CategoryService) List(categoryType int) ([]model.Category, error) {
 func (s *CategoryService) Delete(id uint64) error {
 	return s.DB.Delete(&model.Category{}, id).Error
 }
+
+func (s *CategoryService) Update(category *model.Category) error {
+	return s.DB.Model(&model.Category{}).
+		Where("id = ?", category.ID).
+		Updates(map[string]any{
+			"name": category.Name,
+			"type": category.Type,
+			"sort": category.Sort,
+		}).Error
+}
+
+func (s *CategoryService) Page(page, pageSize int) ([]model.Category, int64, error) {
+	var categories []model.Category
+	var total int64
+
+	err := s.DB.Model(&model.Category{}).
+		Count(&total).
+		Limit(pageSize).
+		Offset((page - 1) * pageSize).
+		Order("sort asc").
+		Find(&categories).Error
+
+	return categories, total, err
+}

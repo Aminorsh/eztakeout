@@ -31,6 +31,9 @@ func InitRouter(db *gorm.DB) *gin.Engine {
 		authorized.POST("/categories", catController.Add)
 		authorized.GET("/categories", catController.List)
 		authorized.DELETE("/categories/:id", catController.Delete)
+		authorized.PUT("/categories", catController.Update)
+
+		authorized.GET("/categories/page", catController.Page)
 	}
 
 	return r

@@ -6,6 +6,7 @@ import (
 	"eztakeout/service"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -81,4 +82,53 @@ func (c *CategoryController) Delete(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"code": 0, "message": "Category deleted successfully"})
+}
+
+func (c *CategoryController) Update(ctx *gin.Context) {
+	var req dto.CategoryUpdateDTO
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"code": 1, "message": "Parameter error"})
+		return
+	}
+
+	category := model.Category{
+		ID:   req.ID,
+		Name: req.Name,
+		Type: req.Type,
+		Sort: req.Sort,
+	}
+
+	if err := c.Service.Update(&category); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"code": 1, "message": "Failed to update category"})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"code": 0, "message": "Category updated successfully"})
+}
+
+func (c *CategoryController) Page(ctx *gin.Context) {
+	pageStr := ctx.Query("page")
+	pageSizeStr := ctx.Query("pageSize")
+
+	page, _ := strconv.Atoi(pageStr)
+	pageSize, _ := strconv.Atoi(pageSizeStr)
+
+	if page <= 0 {
+		page = 1
+	}
+	if pageSize <= 0 {
+		pageSize = 10
+	}
+
+	data, total, err := c.Service.Page(page, pageSize)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"code": 1, "message": "Failed to retrieve categories"})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"code":  0,
+		"data":  data,
+		"total": total,
+	})
 }
