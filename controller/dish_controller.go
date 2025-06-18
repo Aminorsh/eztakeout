@@ -105,3 +105,37 @@ func (c *DishController) UpdateStatus(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, gin.H{"code": 0, "message": "Dish status updated successfully"})
 }
+
+func (c *DishController) Delete(ctx *gin.Context) {
+	var req struct {
+		IDs []uint64 `json:"ids"`
+	}
+	if err := ctx.ShouldBindJSON(&req); err != nil || len(req.IDs) == 0 {
+		ctx.JSON(http.StatusBadRequest, gin.H{"code": 1, "message": "Parameter error"})
+		return
+	}
+
+	if err := c.Service.Delete(req.IDs); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"code": 1, "message": "Failed to delete dishes"})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"code": 0, "message": "Dishes deleted successfully"})
+}
+
+func (c *DishController) ListByCategory(ctx *gin.Context) {
+	categoryIDStr := ctx.Query("category_id")
+	var categoryID uint64
+	if _, err := fmt.Sscan(categoryIDStr, &categoryID); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"code": 1, "message": "Invalid category ID"})
+		return
+	}
+
+	dishes, err := c.Service.ListByCategory(categoryID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"code": 1, "message": "Failed to retrieve"})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"code": 0, "message": "success", "data": dishes})
+}

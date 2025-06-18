@@ -12,6 +12,7 @@ type Dish struct {
 	Status      int       `gorm:"type:tinyint;default:1" json:"status"`
 	Create_time time.Time `gorm:"autoCreateTime" json:"create_time"`
 	Update_time time.Time `gorm:"autoUpdateTime" json:"update_time"`
+	IsDeleted   int       `gorm:"type:tinyint;default:0" json:"-"`
 }
 
 func (Dish) TableName() string {

@@ -48,6 +48,16 @@ func (s *DishService) UpdateStatus(id uint64, status int) error {
 		Update("status", status).Error
 }
 
-func (s *DishService) Delete(id uint64) error {
-	return s.DB.Where("id = ?", id).Delete(&model.Dish{}).Error
+func (s *DishService) Delete(ids []uint64) error {
+	return s.DB.Model(&model.Dish{}).
+		Where("id IN ?", ids).
+		Update("is_deleted", 1).Error
+}
+
+func (s *DishService) ListByCategory(categoryID uint64) ([]model.Dish, error) {
+	var dishes []model.Dish
+	err := s.DB.Where("category_id = ? AND status = 1 AND is_deleted = 0", categoryID).
+		Order("sort asc").
+		Find(&dishes).Error
+	return dishes, err
 }
