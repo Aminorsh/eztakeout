@@ -19,3 +19,7 @@ func (s *CategoryService) List(categoryType int) ([]model.Category, error) {
 	err := s.DB.Where("type = ?", categoryType).Order("sort asc").Find(&categories).Error
 	return categories, err
 }
+
+func (s *CategoryService) Delete(id uint64) error {
+	return s.DB.Delete(&model.Category{}, id).Error
+}

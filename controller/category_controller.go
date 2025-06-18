@@ -4,6 +4,7 @@ import (
 	"eztakeout/dto"
 	"eztakeout/model"
 	"eztakeout/service"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -59,4 +60,25 @@ func (c *CategoryController) List(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, categories)
+}
+
+func (c *CategoryController) Delete(ctx *gin.Context) {
+	idStr := ctx.Param("id")
+	if idStr == "" {
+		ctx.JSON(http.StatusBadRequest, gin.H{"code": 1, "message": "ID parameter is required"})
+		return
+	}
+
+	var id uint64
+	if _, err := fmt.Sscanf(idStr, "%d", &id); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"code": 1, "message": "Invalid ID parameter"})
+		return
+	}
+
+	if err := c.Service.Delete(id); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"code": 1, "message": "Failed to delete category"})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"code": 0, "message": "Category deleted successfully"})
 }
