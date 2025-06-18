@@ -16,11 +16,13 @@ func InitRouter(db *gorm.DB) *gin.Engine {
 	empService := &service.EmployeeService{DB: db}
 	catService := &service.CategoryService{DB: db}
 	dishService := &service.DishService{DB: db}
+	setService := &service.SetmealService{DB: db}
 
 	// Initialize controllers
 	empController := &controller.EmployeeController{Service: empService}
 	catController := &controller.CategoryController{Service: catService}
 	dishController := &controller.DishController{Service: dishService}
+	setController := &controller.SetmealController{Service: setService}
 
 	// Define routes
 	r.POST("/login", empController.Login)
@@ -45,6 +47,8 @@ func InitRouter(db *gorm.DB) *gin.Engine {
 		authorized.DELETE("/dishes", dishController.Delete)
 		authorized.GET("/dishes/list", dishController.ListByCategory)
 		authorized.DELETE("/dishes/:id", dishController.DeleteByID)
+
+		authorized.POST("/setmeals", setController.Add)
 	}
 
 	return r

@@ -1,0 +1,24 @@
+USE eztakeout;
+
+CREATE TABLE setmeal (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  category_id BIGINT NOT NULL,
+  name VARCHAR(64) NOT NULL,
+  price DECIMAL(10,2) NOT NULL,
+  status TINYINT DEFAULT 1,
+  description VARCHAR(255),
+  image VARCHAR(255),
+  create_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  is_deleted TINYINT DEFAULT 0
+);
+
+CREATE TABLE setmeal_dish (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  setmeal_id BIGINT NOT NULL,
+  dish_id BIGINT NOT NULL,
+  name VARCHAR(64),
+  price DECIMAL(10,2),
+  copies INT,
+  sort INT DEFAULT 0
+);
