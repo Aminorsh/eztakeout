@@ -44,6 +44,7 @@ func InitRouter(db *gorm.DB) *gin.Engine {
 		authorized.PUT("/dishes/:id/status", dishController.UpdateStatus)
 		authorized.DELETE("/dishes", dishController.Delete)
 		authorized.GET("/dishes/list", dishController.ListByCategory)
+		authorized.DELETE("/dishes/:id", dishController.DeleteByID)
 	}
 
 	return r

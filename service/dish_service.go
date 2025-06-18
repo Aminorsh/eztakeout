@@ -61,3 +61,9 @@ func (s *DishService) ListByCategory(categoryID uint64) ([]model.Dish, error) {
 		Find(&dishes).Error
 	return dishes, err
 }
+
+func (s *DishService) DeleteByID(id uint64) error {
+	return s.DB.Model(&model.Dish{}).
+		Where("id = ?", id).
+		Update("is_deleted", 1).Error
+}

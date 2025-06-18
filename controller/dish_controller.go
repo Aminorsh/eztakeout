@@ -6,6 +6,7 @@ import (
 	"eztakeout/service"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -121,6 +122,22 @@ func (c *DishController) Delete(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"code": 0, "message": "Dishes deleted successfully"})
+}
+
+func (c *DishController) DeleteByID(ctx *gin.Context) {
+	idStr := ctx.Param("id")
+	id, err := strconv.ParseUint(idStr, 10, 64)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"code": 1, "message": "Invalid ID"})
+		return
+	}
+
+	if err := c.Service.DeleteByID(id); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"code": 1, "message": "Failed to delete dish"})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"code": 0, "message": "Dish deleted successfully"})
 }
 
 func (c *DishController) ListByCategory(ctx *gin.Context) {
